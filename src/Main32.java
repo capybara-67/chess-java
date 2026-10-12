@@ -3,6 +3,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -40,6 +42,21 @@ public class Main32 extends JFrame {
                 final int row = r;
                 final int col = c;
                 button.addActionListener(e -> handleSquareClick(row, col));
+                button.addKeyListener(new KeyAdapter() {
+                    @Override public void keyPressed(KeyEvent event) {
+                        int nextRow = row, nextCol = col;
+                        switch (event.getKeyCode()) {
+                            case KeyEvent.VK_LEFT -> nextCol = Math.max(0, col - 1);
+                            case KeyEvent.VK_RIGHT -> nextCol = Math.min(7, col + 1);
+                            case KeyEvent.VK_UP -> nextRow = Math.max(0, row - 1);
+                            case KeyEvent.VK_DOWN -> nextRow = Math.min(7, row + 1);
+                            case KeyEvent.VK_ESCAPE -> { clearSelection(); render(); event.consume(); return; }
+                            default -> { return; }
+                        }
+                        buttons[nextRow][nextCol].requestFocusInWindow();
+                        event.consume();
+                    }
+                });
                 buttons[r][c] = button;
                 boardPanel.add(button);
             }
@@ -108,6 +125,7 @@ public class Main32 extends JFrame {
 
         if (!matchingMoves.isEmpty()) {
             Move chosenMove = choosePromotionMoveIfNeeded(matchingMoves);
+            if (chosenMove == null) return;
             history.push(new ChessGame(game));
             game.makeMove(chosenMove);
             clearSelection();
@@ -158,6 +176,7 @@ public class Main32 extends JFrame {
                 options[0]
         );
 
+        if (choice < 0) return null;
         PieceType type = switch (choice) {
             case 1 -> PieceType.ROOK;
             case 2 -> PieceType.BISHOP;

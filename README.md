@@ -12,6 +12,8 @@ javac -d build src/Main32.java
 java -cp build Main32
 ```
 
+Use arrow keys to move keyboard focus between squares and Space to select a piece or destination. Escape clears the selected piece. Closing the promotion chooser cancels that move.
+
 ## Check the rules
 
 ```sh
