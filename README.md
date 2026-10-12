@@ -1,2 +1,28 @@
-# chess-java
-A Java Swing chess game with legal moves, undo, castling, en passant, and headless rule tests.
+# Chess in Java
+
+A two-player chess game built with Java Swing. Select a piece to see its legal moves, then select a destination. The board supports castling, en passant, pawn promotion, checkmate, stalemate, and undo.
+
+## Run
+
+Requires JDK 17 or newer.
+
+```sh
+mkdir -p build
+javac -d build src/Main32.java
+java -cp build Main32
+```
+
+## Check the rules
+
+```sh
+javac -d build src/Main32.java tests/ChessTest.java
+java -cp build ChessTest
+```
+
+The headless checks cover 20, 400, and 8,902 legal positions from the opening at depths one through three, Fool's Mate, en passant, castling, and board snapshot isolation.
+
+## Design
+
+`Main32` renders the board. `ChessGame` generates candidate moves and rejects those that leave the moving side in check. Undo restores a copied game state, including castling rights and the en passant square. Every square has a coordinate tooltip and an accessible piece label.
+
+This is a local class project. It has no engine opponent, network play, clocks, repetition detection, or fifty-move draw handling.
